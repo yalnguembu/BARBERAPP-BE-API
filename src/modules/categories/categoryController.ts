@@ -43,7 +43,18 @@ export class CategoryController {
 
       const errors = await validate(category);
 
-      if (!id) new ApiError(StatusCodes.BAD_REQUEST, "category id must be provided");
+      if (!id)
+        new ApiError(StatusCodes.BAD_REQUEST, "category id must be provided");
+
+      const oldCategory = await CategorySevices.getByTile(category.title);
+
+      if (oldCategory && oldCategory.summary == category.summary)
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Nothing to update");
+      // else if (oldCategory)
+      //   throw new ApiError(
+      //     StatusCodes.CONFLICT,
+      //     "Existing category choose anothe title"
+      //   );
 
       if (errors.length)
         throw new ApiError(StatusCodes.BAD_REQUEST, "wrong informations");
