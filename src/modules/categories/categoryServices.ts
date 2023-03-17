@@ -16,8 +16,14 @@ export abstract class CategorySevices {
     return (await CategoryModel.find()) as unknown as CategoryDTO[];
   }
 
+  static async getByTile(title: string) {
+    return (
+      ((await CategoryModel.findOne({ title })) as unknown as CategoryDTO) ?? ""
+    );
+  }
+
   static async update(id: string, data: CategoryDTO) {
-    const category = CategoryModel.findByIdAndUpdate(id);
+    const category = CategoryModel.findByIdAndUpdate(id, data);
     if (!category)
       throw new ApiError(StatusCodes.BAD_REQUEST, "Wrong categry id");
     return category;

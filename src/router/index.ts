@@ -21,7 +21,7 @@ router
 router.get("/user", isUserAdmin, UserController.getAll);
 
 router
-  .route("/category/")
+  .route("/category")
   .post(CategoryController.create)
   .get(CategoryController.getAll)
   router
