@@ -1,3 +1,3 @@
-export * from "./auth.dto";
+export * from "./dto";
 export * from "./editPassword.dto";
-export * from "../users/user.dto";
+export * from "../users/dto/user.dto";

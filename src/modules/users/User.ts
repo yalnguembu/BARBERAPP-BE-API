@@ -1,12 +1,4 @@
-export type UserSchema = {
-  _id?: string;
-  password?: string;
-  email?: string;
-  username?: string;
-  picture?: string;
-  createdAt?: string;
-  updatedAt?: string;
-};
+import { UserSchema } from "../../utils";
 
 export class User {
   private readonly user: UserSchema;
@@ -42,7 +34,7 @@ export class User {
     return this.user.updatedAt ?? "";
   }
 
-  get details() {
+  details = () => {
     return {
       id: this.id,
       email: this.email,
@@ -51,5 +43,5 @@ export class User {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
-  }
+  };
 }
