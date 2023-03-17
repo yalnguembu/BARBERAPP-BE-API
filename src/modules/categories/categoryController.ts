@@ -5,7 +5,7 @@ import { ApiError } from "../../utils";
 import { CategorySevices } from "./categoryServices";
 import { CategoryDTO } from "./dto";
 
-export class CategorieController {
+export class CategoryController {
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
       const category = new CategoryDTO();
@@ -41,7 +41,7 @@ export class CategorieController {
       const errors = await validate(category);
 
       if (!id) new ApiError(StatusCodes.BAD_REQUEST, "category id must be provided");
-      
+
       if (errors.length)
         throw new ApiError(StatusCodes.BAD_REQUEST, "wrong informations");
 
