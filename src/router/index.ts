@@ -1,13 +1,15 @@
 import { type Request, type Response, Router, NextFunction } from "express";
-export const router = Router();
 import { UserController } from "../modules/users/userController";
 import { AuthController } from "../modules/auth/authController";
-import { isAdmin, isConnected } from "../middelwares";
+import { isUserAdmin, isUserConnected } from "../middelwares";
+import { NotFoundError, ErrorHandler } from "../utils";
+
+export const router = Router();
 
 router.post("/auth/login", AuthController.login);
 router.post("/auth/register", AuthController.register);
 
-router.use(isConnected);
+router.use(isUserConnected);
 
 router
   .route("/user/:id")
@@ -15,6 +17,12 @@ router
   .get(UserController.getById)
   .put(UserController.update)
   .delete(UserController.delete);
-router.get("/user", isAdmin, UserController.getAll);
+router.get("/user", isUserAdmin, UserController.getAll);
 
 // router.use("/user", userRoutes);
+
+router.use("*", (req: Request, res: Response, next: NextFunction) => {
+  next(new NotFoundError(req.path));
+});
+
+router.use(ErrorHandler.handle());
