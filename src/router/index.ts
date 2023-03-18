@@ -5,7 +5,6 @@ import { CategoryController } from "../modules/categories";
 import { AuthController } from "../modules/auth";
 import { isUserAdmin, isUserConnected } from "../middelwares";
 import { NotFoundError, ErrorHandler } from "../utils";
-import { CategoryController } from "../modules/categories";
 
 export const router = Router();
 
