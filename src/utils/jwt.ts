@@ -6,7 +6,7 @@ import { DecodedToken } from "./type";
 
 dotenv.config();
 
-export const encodeToken = (payload: { _id: string; email: string }) => {
+export const encodeToken = (payload: DecodedToken) => {
   return jwt.sign(payload, process.env.JWT_SECRET_KEY as string, {
     expiresIn: "14 days",
   });
