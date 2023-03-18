@@ -1,9 +1,10 @@
 import { type Request, type Response, Router, NextFunction } from "express";
-import { UserController } from "../modules/users/userController";
-import { AuthController } from "../modules/auth/authController";
+import { UserController } from "../modules/users";
+import { ServiceController } from "../modules/services";
+import { CategoryController } from "../modules/categories";
+import { AuthController } from "../modules/auth";
 import { isUserAdmin, isUserConnected } from "../middelwares";
 import { NotFoundError, ErrorHandler } from "../utils";
-import { CategoryController } from "../modules/categories";
 
 export const router = Router();
 
@@ -21,13 +22,24 @@ router
 router.get("/user", isUserAdmin, UserController.getAll);
 
 router
-  .route("/category/")
+  .route("/category")
   .post(CategoryController.create)
-  .get(CategoryController.getAll)
-  router
-    .route("/category/:id")
-    .put(CategoryController.update)
-    .delete(CategoryController.delete);
+  .get(CategoryController.getAll);
+router
+  .route("/category/:id")
+  .put(CategoryController.update)
+  .delete(CategoryController.delete);
+
+router
+  .use(isUserAdmin)
+  .route("/service")
+  .post(ServiceController.create)
+  .get(ServiceController.getAll);
+router
+  .route("/service/:id")
+  .get(ServiceController.getById)
+  .put(ServiceController.update)
+  .delete(ServiceController.delete);
 
 router.use("*", (req: Request, res: Response, next: NextFunction) => {
   next(new NotFoundError(req.path));

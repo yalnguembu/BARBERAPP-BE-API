@@ -9,12 +9,40 @@ export const isUserConnected = (
 ) => {
   let token = req.headers.authorization ?? "";
   const decodedToken = decodeToken(token.substring(7));
-  if (token && decodedToken) next();
-  else next(new ApiError(StatusCodes.UNAUTHORIZED, "Please authenticate"));
+
+  if (!token && decodedToken)
+    next(new ApiError(StatusCodes.UNAUTHORIZED, "Please authenticate"));
+
+  req.body.user = {
+    id: decodedToken?._id,
+    email: decodedToken?.email,
+    roles: ["admin"],
+  };
+  next();
 };
 
-export const isUserAdmin = (req: Request, res: Response, next: NextFunction) =>
-  next();
+export const isUserAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const roles = req.body.user.roles;
 
-export const isUserAgent = (req: Request, res: Response, next: NextFunction) =>
+  if (!roles.find((role: string) => role === "admin"))
+    next(new ApiError(StatusCodes.UNAUTHORIZED, "access forbbiden"));
+
   next();
+};
+
+export const isUserAgent = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { roles } = req.body;
+
+  if (!roles.find((role: string) => role === "agent"))
+    next(new ApiError(StatusCodes.UNAUTHORIZED, "access forbbiden"));
+
+  next();
+};

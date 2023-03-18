@@ -11,11 +11,14 @@ export class CategoryController {
       const category = new CategoryDTO();
       category.title = req.body.title ?? "";
       category.summary = req.body.summary ?? "";
-
       const errors = await validate(category);
 
       if (errors.length)
         throw new ApiError(StatusCodes.BAD_REQUEST, "bad request");
+      const oldCategory = await CategorySevices.getByTile(category.title);
+
+      if (oldCategory)
+        throw new ApiError(StatusCodes.CONFLICT, "Existing category");
 
       res.status(200).json(await CategorySevices.create(category));
     } catch (error) {
@@ -40,12 +43,23 @@ export class CategoryController {
 
       const errors = await validate(category);
 
-      if (!id) new ApiError(StatusCodes.BAD_REQUEST, "category id must be provided");
+      if (!id)
+        new ApiError(StatusCodes.BAD_REQUEST, "category id must be provided");
+
+      const oldCategory = await CategorySevices.getByTile(category.title);
+
+      if (oldCategory && oldCategory.summary == category.summary)
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Nothing to update");
+      // else if (oldCategory)
+      //   throw new ApiError(
+      //     StatusCodes.CONFLICT,
+      //     "Existing category choose anothe title"
+      //   );
 
       if (errors.length)
         throw new ApiError(StatusCodes.BAD_REQUEST, "wrong informations");
 
-      res.status(200).json(await CategorySevices.update(id,category));
+      res.status(200).json(await CategorySevices.update(id, category));
     } catch (error) {
       next(error);
     }
