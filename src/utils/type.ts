@@ -6,6 +6,12 @@ export interface Error {
   stack?: string;
 }
 
+export type DecodedToken = {
+  _id: string;
+  email: string;
+  role: string;
+};
+
 export type UserSchema = {
   _id?: string;
   password?: string;
@@ -32,8 +38,11 @@ export type ServiceSchema = {
   duration: number;
 };
 
-export type DecodedToken = {
-  _id: string;
-  email: string;
-  role: string;
+export type ReservationSchema = {
+  _id?: string;
+  service: string;
+  date: string;
+  time: string;
+  client: string;
+  maker: string;
 };

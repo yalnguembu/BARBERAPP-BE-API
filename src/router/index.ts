@@ -1,8 +1,9 @@
 import { type Request, type Response, Router, NextFunction } from "express";
+import { AuthController } from "../modules/auth";
 import { UserController } from "../modules/users";
 import { ServiceController } from "../modules/services";
 import { CategoryController } from "../modules/categories";
-import { AuthController } from "../modules/auth";
+import { ReservationController } from "../modules/reservations";
 import { isUserAdmin, isUserConnected } from "../middelwares";
 import { NotFoundError, ErrorHandler } from "../utils";
 
@@ -40,6 +41,17 @@ router
   .get(ServiceController.getById)
   .put(ServiceController.update)
   .delete(ServiceController.delete);
+
+router
+  .use(isUserAdmin)
+  .route("/reservation")
+  .post(ReservationController.create)
+  .get(ReservationController.getAll);
+router
+  .route("/reservation/:id")
+  .get(ReservationController.getById)
+  .put(ReservationController.update)
+  .delete(ReservationController.delete);
 
 router.use("*", (req: Request, res: Response, next: NextFunction) => {
   next(new NotFoundError(req.path));
