@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, Length, IsString } from "class-validator";
-import { User } from "../users/User";
+import { User } from "../../users/User";
 
 export class AuthDTO implements Pick<User, "email" | "password"> {
   @IsNotEmpty()

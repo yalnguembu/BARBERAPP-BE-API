@@ -1,15 +1,20 @@
-import { UserDTO, userModel as UserModel, User, UserSchema } from "../users";
+import { UserDTO, userModel as UserModel, User } from "../users";
 import bcrypt from "bcrypt";
+import { ApiError, encodeToken, UserSchema } from "../../utils";
+import { StatusCodes } from "http-status-codes";
 
 export class AuthService {
-  static async register(user: Pick<User, "email" | "password">) {
+  static async register(crudentials: Pick<User, "email" | "password">) {
     const salt = await bcrypt.genSalt(10);
-    const hahsedPassword = await bcrypt.hash(user.password, salt);
+    const hahsedPassword = await bcrypt.hash(crudentials.password, salt);
     const newUser = new UserModel({
-      email: user.email,
+      email: crudentials.email,
       password: hahsedPassword,
     });
-    return await newUser.save();
+
+    const { _id, email, username } = await newUser.save();
+    const token = encodeToken({ _id: _id as unknown as string, email });
+    return { _id, email, username, token };
   }
 
   static async login(userCrudential: Pick<User, "email" | "password">) {
@@ -17,16 +22,21 @@ export class AuthService {
       email: userCrudential.email,
     })) as unknown as UserSchema;
 
-    if (!user) throw new Error("wrong crudentials");
+    if (!user)
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "wrong crudentials");
 
-    const validate = bcrypt.compare(
+    const validate = await bcrypt.compare(
       userCrudential.password,
       user.password ?? ""
     );
 
     if (!validate) {
-      throw new Error("wrong crudentials");
+      throw new ApiError(StatusCodes.UNAUTHORIZED, "wrong crudentials");
     }
+
+    console.log(
+      await bcrypt.compare(userCrudential.password, user.password ?? "")
+    );
 
     const { _id, email, username } = user;
     return { _id, email, username };

@@ -5,9 +5,10 @@ export class ApiError extends Error {
   statusCode: number;
   rawsErrors?: string[];
 
-  constructor(statusCode: number, message: string) {
+  constructor(statusCode: number, message: string, rawsErrors?: string[]) {
     super(message);
     this.statusCode = statusCode;
+    this.rawsErrors = rawsErrors;
     Error.captureStackTrace(this, this.constructor);
   }
 }
