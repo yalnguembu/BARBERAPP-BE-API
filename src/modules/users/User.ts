@@ -26,6 +26,10 @@ export class User {
     return this.user.picture ?? "";
   }
 
+  get role() {
+    return this.user.role ?? "";
+  }
+
   get createdAt() {
     return this.user.createdAt ?? "";
   }
@@ -40,6 +44,7 @@ export class User {
       email: this.email,
       username: this.username,
       picture: this.picture,
+      role: this.role,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

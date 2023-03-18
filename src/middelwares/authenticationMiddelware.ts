@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { ApiError, decodeToken, encodeToken } from "../utils";
+import { ApiError, decodeToken } from "../utils";
 
 export const isUserConnected = (
   req: Request,
@@ -16,7 +16,7 @@ export const isUserConnected = (
   req.body.user = {
     id: decodedToken?._id,
     email: decodedToken?.email,
-    roles: ["admin"],
+    role: "admin",
   };
   next();
 };
@@ -26,9 +26,7 @@ export const isUserAdmin = (
   res: Response,
   next: NextFunction
 ) => {
-  const roles = req.body.user.roles;
-
-  if (!roles.find((role: string) => role === "admin"))
+  if (req.body.user.role !== "admin")
     next(new ApiError(StatusCodes.UNAUTHORIZED, "access forbbiden"));
 
   next();
@@ -39,9 +37,7 @@ export const isUserAgent = (
   res: Response,
   next: NextFunction
 ) => {
-  const { roles } = req.body;
-
-  if (!roles.find((role: string) => role === "agent"))
+  if (req.body.user.role !== "admin")
     next(new ApiError(StatusCodes.UNAUTHORIZED, "access forbbiden"));
 
   next();
