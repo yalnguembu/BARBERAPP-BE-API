@@ -8,7 +8,7 @@ export class AuthService {
     const salt = await bcrypt.genSalt(10);
     const hahsedPassword = await bcrypt.hash(crudentials.password, salt);
     const newUser = new UserModel({
-      email: crudentials.email,
+      email: crudentials.email, 
       password: hahsedPassword,
     });
 
