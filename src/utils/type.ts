@@ -15,7 +15,7 @@ export type DecodedToken = {
 export type UserSchema = {
   _id?: string;
   password?: string;
-  email?: string;
+  email: string;
   role?: string;
   username?: string;
   picture?: string;
@@ -40,9 +40,9 @@ export type ServiceSchema = {
 
 export type ReservationSchema = {
   _id?: string;
-  service: string;
+  service: ServiceSchema;
   date: string;
   time: string;
-  client: string;
+  client: UserSchema;
   maker: string;
 };

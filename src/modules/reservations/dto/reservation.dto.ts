@@ -1,23 +1,21 @@
 import { IsNotEmpty, IsString, IsNumber, IsPositive, IsDate } from "class-validator";
+import { ServiceDTO } from "../../services";
+import { UpdateUserDTO } from "../../users";
 
 export class ReservationDTO {
   @IsNotEmpty()
-  @IsString()
-  service!: string;
+  service!: ServiceDTO;
 
   @IsNotEmpty()
   @IsString()
-  @IsDate()
   date!: string;
 
   @IsString()
   @IsNotEmpty()
   time!: string;
 
-  @IsPositive()
   @IsNotEmpty()
-  @IsString()
-  client!: string;
+  client!: UpdateUserDTO;
 
   @IsNotEmpty()
   @IsString()

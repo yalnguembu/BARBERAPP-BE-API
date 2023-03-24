@@ -30,7 +30,7 @@ export class ErrorHandler {
       const statusCode = error.statusCode || 500;
       res.status(statusCode).send({
         success: false,
-        messasge: error.message,
+        message: error.message,
         // stack: error.stack,
         rawsError: error.rawsErrors ?? [],
       });

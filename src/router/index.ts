@@ -19,34 +19,27 @@ router
   .get(UserController.getById)
   .put(UserController.update)
   .delete(UserController.delete);
+router.get("/users", isUserAdmin, UserController.getAll);
 
-router.get("/user", isUserAdmin, UserController.getAll);
-
-router
-  .route("/category")
-  .post(CategoryController.create)
-  .get(CategoryController.getAll);
+router.post("/category", CategoryController.create);
 router
   .route("/category/:id")
   .put(CategoryController.update)
   .delete(CategoryController.delete);
+router.get("/categories", CategoryController.getAll);
 
-router
-  .use(isUserAdmin)
-  .route("/service")
-  .post(ServiceController.create)
-  .get(ServiceController.getAll);
+router.post("/service", isUserAdmin, ServiceController.create);
 router
   .route("/service/:id")
   .get(ServiceController.getById)
   .put(ServiceController.update)
   .delete(ServiceController.delete);
+router.get("/services", isUserConnected, ServiceController.getAll);
 
 router
-  .use(isUserAdmin)
-  .route("/reservation")
-  .post(ReservationController.create)
-  .get(ReservationController.getAll);
+  .post("/reservation", ReservationController.create)
+  .get("/reservations", isUserAdmin, ReservationController.getAll)
+
 router
   .route("/reservation/:id")
   .get(ReservationController.getById)

@@ -32,5 +32,6 @@ export abstract class CategorySevices {
   static async delete(id: string) {
     const succes = CategoryModel.findByIdAndDelete(id);
     if (!succes) throw new ApiError(StatusCodes.BAD_REQUEST, "wrong category");
+    return succes;
   }
 }

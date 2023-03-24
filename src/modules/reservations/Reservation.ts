@@ -7,7 +7,7 @@ export class Reservation {
   }
 
   get service() {
-    return this.reservation.service.trim();
+    return this.reservation.service;
   }
   get date() {
     return this.reservation.date.trim();
@@ -18,7 +18,7 @@ export class Reservation {
   }
 
   get client() {
-    return this.reservation.client.trim();
+    return this.reservation.client;
   }
 
   get maker() {

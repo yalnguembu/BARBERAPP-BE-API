@@ -20,9 +20,15 @@ export abstract class ReservationServices {
     return (await ReservationModel.findById(id)) ?? "";
   }
 
+  static async getByUserId(userId: string) {
+    return (await ReservationModel.find({ 'client.id': userId } )) ?? "";
+  }
+
   static async getByName(name: string) {
     return (
-      ((await ReservationModel.findOne({ name })) as unknown as ReservationDTO) ?? ""
+      ((await ReservationModel.findOne({
+        name,
+      })) as unknown as ReservationDTO) ?? ""
     );
   }
 

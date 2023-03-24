@@ -1,6 +1,9 @@
 import type { Request, Response } from "express";
-// import User from "./userSchema";
 import { UserSevices } from "./userServices";
+import { validate } from "class-validator";
+import { UserDTO, UpdateUserDTO } from "./dto";
+import { StatusCodes } from "http-status-codes";
+import { ApiError } from "../../utils";
 
 export class UserController {
   static async getById(req: Request, res: Response) {
@@ -14,7 +17,7 @@ export class UserController {
         res.status(500).send(error);
       }
     }
-    res.send(400).send("Bad request");
+    res.status(400).send("Bad request");
   }
 
   static async getAll(req: Request, res: Response) {
@@ -28,44 +31,35 @@ export class UserController {
   }
 
   static async update(req: Request, res: Response) {
-    // if (req.body.userId === req.params.id) {
-    //   if (req.body.password) {
-    //     res.status(403).json("you can't update your pasword here!");
-    //   } else {
-    //     try {
-    //       const updateUser = await User.findByIdAndUpdate(
-    //         req.params.id,
-    //         {
-    //           $set: req.body,
-    //         },
-    //         { new: true }
-    //       );
-    //       const { __v, password, ...others } = updateUser._doc;
-    //       res.status(200).json(others);
-    //     } catch (err) {
-    //       res.status(500).json(err);
-    //     }
-    //   }
-    // } else {
-    //   res.status(401).json("you can only update your account!");
-    // }
+    const userId = req.params?.id;
+    if (userId && !req.body.password) {
+      const user = new UserDTO();
+      if (req.body.username) user.username = req.body.username;
+      if (req.body.email) user.email = req.body.email;
+      if (req.body.picture) user.picture = req.body.picture;
+
+      try {
+        const updatedUser = await UserSevices.update(userId, user);
+        if (updatedUser) res.status(200).json(updatedUser);
+        else res.status(422).json("user not found");
+      } catch (error) {
+        res.status(500).send(error);
+      }
+    }
+    res.status(400).send("Bad request");
   }
 
   static async delete(req: Request, res: Response) {
-    //   if (req.body.userId === req.params.id) {
-    //     try {
-    //       const user = await User.findById(req.params.id);
-    //       try {
-    //         await User.findByIdAndDelete(req.params.id);
-    //         res.status(200).json("user has been deleted");
-    //       } catch (err) {
-    //         res.status(500).json(err);
-    //       }
-    //     } catch (err) {
-    //       res.status(404).json("user not found");
-    //     }
-    //   } else {
-    //     res.status(401).json("you can only delete your account!");
-    //   }
+    const userId = req.params?.id;
+    if (userId && !req.body.password) {
+      try {
+        if (await UserSevices.delete(userId))
+          res.status(200).json({ success: true });
+        else res.status(422).json("user not found");
+      } catch (error) {
+        res.status(500).send(error);
+      }
+    }
+    res.status(400).send("Bad request");
   }
 }
