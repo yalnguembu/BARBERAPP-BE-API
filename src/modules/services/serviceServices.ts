@@ -37,5 +37,6 @@ export abstract class ServiceServices {
     const succes = ServiceModel.findByIdAndDelete(id);
     if (!succes)
       throw new ApiError(StatusCodes.BAD_REQUEST, "incorrect service id");
+    return succes;
   }
 }

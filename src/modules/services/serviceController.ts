@@ -89,7 +89,9 @@ export class ServiceController {
           StatusCodes.BAD_REQUEST,
           "service id must be provided"
         );
-      res.status(200).json({ success: true });
+
+      if (await ServiceServices.delete(id))
+        res.status(200).json({ success: true });
     } catch (error) {
       next(error);
     }

@@ -50,11 +50,6 @@ export class CategoryController {
 
       if (oldCategory && oldCategory.summary == category.summary)
         throw new ApiError(StatusCodes.BAD_REQUEST, "Nothing to update");
-      // else if (oldCategory)
-      //   throw new ApiError(
-      //     StatusCodes.CONFLICT,
-      //     "Existing category choose anothe title"
-      //   );
 
       if (errors.length)
         throw new ApiError(StatusCodes.BAD_REQUEST, "wrong informations");
@@ -74,7 +69,8 @@ export class CategoryController {
           StatusCodes.BAD_REQUEST,
           "category id must be provided"
         );
-      res.status(200).json({ success: true });
+      if (await CategorySevices.delete(id))
+        res.status(200).json({ success: true });
     } catch (error) {
       next(error);
     }

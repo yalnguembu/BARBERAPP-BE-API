@@ -12,9 +12,13 @@ export class AuthService {
       password: hahsedPassword,
     });
 
-    const { _id, email, username } = await newUser.save();
-    const token = encodeToken({ _id: _id as unknown as string, email });
-    return { _id, email, username, token };
+    const { _id, email, username, role } = await newUser.save();
+    const accessToken = encodeToken({
+      _id: _id as unknown as string,
+      email,
+      role,
+    });
+    return { id: _id, email, username, accessToken };
   }
 
   static async login(userCrudential: Pick<User, "email" | "password">) {
@@ -38,8 +42,13 @@ export class AuthService {
       await bcrypt.compare(userCrudential.password, user.password ?? "")
     );
 
-    const { _id, email, username } = user;
-    return { _id, email, username };
+    const { _id, email, username, role } = user;
+    const accessToken = encodeToken({
+      _id: _id as unknown as string,
+      email,
+      role: role as unknown as string,
+    });
+    return { id: _id, email, username, accessToken };
   }
 
   static async editPassowrd(id: string, newPassword: string) {
