@@ -1,4 +1,7 @@
 import { type Request, type Response, Router, NextFunction } from "express";
+import express from "express";
+import { join } from "path";
+
 import { AuthController } from "../modules/auth";
 import { UserController } from "../modules/users";
 import { ServiceController } from "../modules/services";
@@ -11,7 +14,9 @@ export const router = Router();
 
 router.post("/auth/login", AuthController.login);
 router.post("/auth/register", AuthController.register);
+router.post("/auth/verify-token", AuthController.verifyToken);
 
+router.use("/storage", express.static("public"));
 router.use(isUserConnected);
 
 router
@@ -38,7 +43,7 @@ router.get("/services", isUserConnected, ServiceController.getAll);
 
 router
   .post("/reservation", ReservationController.create)
-  .get("/reservations", isUserAdmin, ReservationController.getAll)
+  .get("/reservations", isUserAdmin, ReservationController.getAll);
 
 router
   .route("/reservation/:id")
@@ -47,7 +52,7 @@ router
   .delete(ReservationController.delete);
 
 router.use("*", (req: Request, res: Response, next: NextFunction) => {
-  next(new NotFoundError(req.path));
+  next(new NotFoundError(`'${req.baseUrl}'`));
 });
 
 router.use(ErrorHandler.handle());
