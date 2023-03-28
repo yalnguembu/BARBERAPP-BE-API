@@ -42,6 +42,19 @@ export class AuthController {
     }
   }
 
+  static async verifyToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const token = req.body.accessToken;
+
+      if (!token)
+        throw new ApiError(StatusCodes.BAD_REQUEST, "please provide a token");
+      await AuthService.verifyToken(token);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async editPassowrd(req: Request, res: Response) {
     const id = req.params?.id;
     const password = req.body.newPassword;

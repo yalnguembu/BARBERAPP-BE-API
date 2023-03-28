@@ -4,10 +4,10 @@ import { UserSchema } from "../../utils";
 
 export abstract class UserSevices {
   static async getById(id: string) {
-    const { email, username, _id } = (await UserModel.findById(
+    const { email, username, _id, picture } = (await UserModel.findById(
       id
     )) as unknown as UserDTO;
-    return { email, username, id: _id };
+    return { email, username, id: _id, picture };
   }
 
   static async getByEmail(userEmail: string) {
