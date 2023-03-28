@@ -21,7 +21,7 @@
   "scripts": {
     "build": "npx tsc",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/src/main.js\"",
-    "start": "node ./dist/main"
+    "start": "node ./dist/src/main.js"
   },
   "author": "Yal Nguembu ",
   "license": "ISC",
