@@ -21,7 +21,7 @@ export abstract class ReservationServices {
   }
 
   static async getByUserId(userId: string) {
-    return (await ReservationModel.find({ 'client.id': userId } )) ?? "";
+    return (await ReservationModel.find({ "client.id": userId })) ?? "";
   }
 
   static async getByName(name: string) {
@@ -43,5 +43,6 @@ export abstract class ReservationServices {
     const succes = ReservationModel.findByIdAndDelete(id);
     if (!succes)
       throw new ApiError(StatusCodes.BAD_REQUEST, "incorrect service id");
+    return succes;
   }
 }

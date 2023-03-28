@@ -2,6 +2,7 @@ import { UserDTO, userModel as UserModel, User } from "../users";
 import bcrypt from "bcrypt";
 import { ApiError, encodeToken, UserSchema } from "../../utils";
 import { StatusCodes } from "http-status-codes";
+import { decodeToken } from "../../utils";
 
 export class AuthService {
   static async register(crudentials: Pick<User, "email" | "password">) {
@@ -18,7 +19,7 @@ export class AuthService {
       email,
       role,
     });
-    return { id: _id, email, username, accessToken };
+    return { id: _id, email, username, accessToken, role };
   }
 
   static async login(userCrudential: Pick<User, "email" | "password">) {
@@ -38,17 +39,17 @@ export class AuthService {
       throw new ApiError(StatusCodes.UNAUTHORIZED, "wrong crudentials");
     }
 
-    console.log(
-      await bcrypt.compare(userCrudential.password, user.password ?? "")
-    );
-
     const { _id, email, username, role } = user;
     const accessToken = encodeToken({
       _id: _id as unknown as string,
       email,
       role: role as unknown as string,
     });
-    return { id: _id, email, username, accessToken };
+    return { id: _id, email, username, accessToken, role };
+  }
+
+  static async verifyToken(token: string) {
+    return decodeToken(token);
   }
 
   static async editPassowrd(id: string, newPassword: string) {

@@ -10,9 +10,6 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cors());
-app.use(express.static("public"));
-app.use("/images/", express.static("images"));
-
 app.use("/", router);
 
 app.listen(port, () => {

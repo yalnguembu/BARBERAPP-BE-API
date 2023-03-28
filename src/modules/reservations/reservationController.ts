@@ -17,7 +17,6 @@ export class ReservationController {
       reservation.maker = req.body.maker ?? "";
       const errors = await validate(reservation);
 
-      console.log(errors);
 
       if (errors.length)
         throw new ApiError(StatusCodes.BAD_REQUEST, "bad request");
@@ -35,7 +34,6 @@ export class ReservationController {
     try {
       if (userId) {
         const user = await UserSevices.getById(userId as unknown as string);
-        console.log(user)
 
         if (!user) new ApiError(StatusCodes.BAD_REQUEST, "wrong user id");
 
@@ -124,7 +122,7 @@ export class ReservationController {
           StatusCodes.BAD_REQUEST,
           "service id must be provided"
         );
-      res.status(StatusCodes.ACCEPTED).json({ success: true });
+      res.status(StatusCodes.ACCEPTED).json(await ReservationServices.delete(id));
     } catch (error) {
       next(error);
     }
