@@ -1,31 +1,34 @@
-import { userModel as User } from "./userModel";
-import type { UserDTO } from "../users/";
+import { userModel as UserModel } from "./userModel";
+import { User, type UserDTO, type UpdateUserDTO } from "../users/";
+import { UserSchema } from "../../utils";
 
 export abstract class UserSevices {
   static async getById(id: string) {
-    const { email, username, _id } = (await User.findById(
+    const { email, username, _id } = (await UserModel.findById(
       id
     )) as unknown as UserDTO;
     return { email, username, id: _id };
   }
 
   static async getByEmail(userEmail: string) {
-    const { email, username, _id } = (await User.findOne({
+    const finedUser = (await UserModel.findOne({
       email: userEmail,
-    })) as unknown as UserDTO;
-    return { email, username, id: _id };
+    })) as UserSchema;
+
+    if (finedUser) return new User(finedUser).details();
+    return "";
   }
 
   static async getAll() {
-    const users = (await User.find()) as unknown as UserDTO[];
+    const users = (await UserModel.find()) as unknown as UserDTO[];
     return users.map((user: UserDTO) => {
       const { email, username, _id } = user;
       return { email, username, id: _id };
     });
   }
 
-  static async update(id: number, user: { username: string; email: string }) {
-    const { email, username, _id } = (await User.findByIdAndUpdate(
+  static async update(id: string, user: UpdateUserDTO) {
+    const { email, username, _id } = (await UserModel.findByIdAndUpdate(
       id,
       { $set: user },
       { new: true }
@@ -33,5 +36,7 @@ export abstract class UserSevices {
     return { email, username, id: _id };
   }
 
-  static async delete(id: string) {}
+  static async delete(id: string) {
+    return await UserModel.findByIdAndDelete(id);
+  }
 }

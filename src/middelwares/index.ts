@@ -1,2 +1,1 @@
-export * from "./isConnected";
-export * from "./isAdmin";
+export * from "./authenticationMiddelware";
