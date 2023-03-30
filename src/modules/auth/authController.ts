@@ -33,14 +33,6 @@ export class AuthController {
       if (errors.length)
         throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid crudentials");
 
-      const user = await UserSevices.getByEmail(crudentials.email);
-
-      if (user)
-        throw new ApiError(
-          StatusCodes.CONFLICT,
-          "email address already taken",
-          [JSON.stringify(user)]
-        );
       else res.status(200).json(await AuthService.register(crudentials));
     } catch (error) {
       next(error);
