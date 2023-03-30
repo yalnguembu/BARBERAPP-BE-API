@@ -1,5 +1,8 @@
 import { type Request, type Response, Router, NextFunction } from "express";
 import express from "express";
+import multer from "multer";
+
+const upload = multer({ dest: `${__dirname}/public/images/services/` });
 
 import { AuthController } from "../modules/auth";
 import { UserController } from "../modules/users";
@@ -47,7 +50,13 @@ router.get(
   CategoryController.getAll
 );
 
-router.post("/service", isUserConnected, isUserAdmin, ServiceController.create);
+router.post(
+  "/service",
+  isUserConnected,
+  isUserAdmin,
+  upload.array("file"),
+  ServiceController.create
+);
 router.get("/service/:id", isUserConnected, ServiceController.getById);
 router.put(
   "/service/:id",
@@ -64,11 +73,7 @@ router.delete(
 router.get("/services", isUserConnected, ServiceController.getAll);
 
 router.post("/reservation", isUserConnected, ReservationController.create);
-router.get(
-  "/reservations",
-  isUserConnected,
-  ReservationController.getAll
-);
+router.get("/reservations", isUserConnected, ReservationController.getAll);
 
 router.put("/reservation/:id", isUserConnected, ReservationController.update);
 router.delete(
