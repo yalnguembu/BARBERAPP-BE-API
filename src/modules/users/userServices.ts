@@ -11,11 +11,11 @@ export abstract class UserSevices {
   }
 
   static async getByEmail(userEmail: string) {
-    const finedUser = (await UserModel.findOne({
+    const finedUser = await UserModel.findOne({
       email: userEmail,
-    })) as UserSchema;
-
-    if (finedUser) return new User(finedUser).details();
+    }).exec();
+    if (finedUser)
+      return new User(finedUser as unknown as UserSchema).details();
     return "";
   }
 
