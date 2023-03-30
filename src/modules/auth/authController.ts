@@ -36,7 +36,7 @@ export class AuthController {
       const user = await UserSevices.getByEmail(crudentials.email);
 
       if (user) throw new ApiError(StatusCodes.CONFLICT, "already exists");
-      res.status(200).json(AuthService.register(crudentials));
+      res.status(200).json(await AuthService.register(crudentials));
     } catch (error) {
       next(error);
     }

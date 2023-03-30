@@ -8,15 +8,21 @@ import { ServiceDTO } from "./dto";
 export class ServiceController {
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(req.file);
+      const { name, description, picture, price, duration } = req.body;
+      const files = req.files;
+      if (!files || !files.length)
+        throw new ApiError(StatusCodes.BAD_REQUEST, "bad request");
+      console.log(files[0].filename);
+      console.log({ name, description, picture, price, duration });
       const service = new ServiceDTO();
       service.name = req.body.name ?? "";
-      service.description = req.body.description ?? "";
+      service.description = req.body.description ?? 0;
       service.category = req.body.category ?? "";
       service.picture = req.body.picture ?? "service-default.png";
-      service.price = req.body.price ?? "";
-      service.duration = req.body.duration ?? "";
+      service.price = parseInt(req.body.price) ?? 0;
+      service.duration = parseInt(req.body.duration) ?? 0;
       const errors = await validate(service);
+      // console.log(errors);
 
       if (errors.length)
         throw new ApiError(StatusCodes.BAD_REQUEST, "bad request");
