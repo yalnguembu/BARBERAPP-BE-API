@@ -13,4 +13,7 @@ export class UserDTO {
 
   @IsNotEmpty()
   picture!: string;
+
+  @IsNotEmpty()
+  role!: string;
 }
