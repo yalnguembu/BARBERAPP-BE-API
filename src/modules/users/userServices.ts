@@ -22,8 +22,8 @@ export abstract class UserSevices {
   static async getAll() {
     const users = (await UserModel.find()) as unknown as UserDTO[];
     return users.map((user: UserDTO) => {
-      const { email, username, _id } = user;
-      return { email, username, id: _id };
+      const { email, username, _id, role, picture } = user;
+      return { email, username, id: _id, role, picture };
     });
   }
 

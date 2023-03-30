@@ -8,6 +8,7 @@ import { ServiceDTO } from "./dto";
 export class ServiceController {
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log(req.file);
       const service = new ServiceDTO();
       service.name = req.body.name ?? "";
       service.description = req.body.description ?? "";
