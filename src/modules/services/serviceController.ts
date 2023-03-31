@@ -8,12 +8,11 @@ import { ServiceDTO } from "./dto";
 export class ServiceController {
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(req.file);
       const service = new ServiceDTO();
       service.name = req.body.name ?? "";
       service.description = req.body.description ?? "";
       service.category = req.body.category ?? "";
-      service.picture = req.body.picture ?? "service-default.png";
+      service.picture = req.body.picture;
       service.price = req.body.price ?? "";
       service.duration = req.body.duration ?? "";
       const errors = await validate(service);
@@ -59,10 +58,14 @@ export class ServiceController {
       const service = new ServiceDTO();
       service.name = req.body.name ?? "";
       service.description = req.body.description ?? "";
-      service.picture = req.body.picture ?? "";
+      service.picture =
+        req.body.picture ??
+        `service-${Math.floor(Math.random() * (9 - 2) + 2)}.png`;
       service.price = req.body.price ?? "";
       service.duration = req.body.duration ?? "";
+      service.category = req.body.category ?? "";
       const errors = await validate(service);
+      console.log(errors);
 
       if (!id)
         new ApiError(StatusCodes.BAD_REQUEST, "service id must be provided");
