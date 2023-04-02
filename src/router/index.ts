@@ -74,6 +74,7 @@ router.get("/services", isUserConnected, ServiceController.getAll);
 
 router.post("/reservation", isUserConnected, ReservationController.create);
 router.get("/reservations", isUserConnected, ReservationController.getAll);
+router.get("/reservations/archived", isUserConnected, ReservationController.getArchived);
 
 router.put("/reservation/:id", isUserConnected, ReservationController.update);
 router.delete(
@@ -82,6 +83,11 @@ router.delete(
   ReservationController.delete
 );
 router.get("/reservation/:id", isUserConnected, ReservationController.getById);
+router.put(
+  "/reservation/:id/cancel",
+  isUserConnected,
+  ReservationController.cancel
+);
 
 router.use("*", (req: Request, res: Response, next: NextFunction) => {
   next(new NotFoundError(`'${req.baseUrl}'`));
