@@ -3,6 +3,7 @@ import { type ReservationDTO } from "./dto";
 import { ApiError, ReservationSchema } from "../../utils";
 import { Reservation } from "./Reservation";
 import { StatusCodes } from "http-status-codes";
+import { UpdateReservationDTO } from "./dto/updateReservation.dto";
 
 export abstract class ReservationServices {
   static async create(data: ReservationSchema) {
@@ -13,15 +14,53 @@ export abstract class ReservationServices {
   }
 
   static async getAll() {
-    return await ReservationModel.find();
+    const today = new Date().toISOString();
+    return (
+      (await ReservationModel.find({
+        date: {
+          $gt: today,
+        },
+      })) ?? ""
+    );
+  }
+
+  static async getArchived() {
+    const today = new Date().toISOString();
+    return (
+      (await ReservationModel.find({
+        date: {
+          $lt: today,
+        },
+      })) ?? ""
+    );
+  }
+
+  static async getArchivedByUserId(userId: string) {
+    const today = new Date().toISOString();
+    return (
+      (await ReservationModel.find({
+        date: {
+          $lt: today,
+        },
+        "client.id": userId,
+      })) ?? ""
+    );
+  }
+
+  static async getByUserId(userId: string) {
+    const today = new Date().toISOString();
+    return (
+      (await ReservationModel.find({
+        "client.id": userId,
+        date: {
+          $gt: today,
+        },
+      })) ?? ""
+    );
   }
 
   static async getById(id: string) {
     return (await ReservationModel.findById(id)) ?? "";
-  }
-
-  static async getByUserId(userId: string) {
-    return (await ReservationModel.find({ "client.id": userId })) ?? "";
   }
 
   static async getByName(name: string) {
@@ -32,15 +71,33 @@ export abstract class ReservationServices {
     );
   }
 
-  static async update(id: string, data: ReservationDTO) {
-    const service = ReservationModel.findByIdAndUpdate(id, data);
+  static async update(id: string, data: UpdateReservationDTO) {
+    const service = await ReservationModel.findByIdAndUpdate(id, data, {
+      new: true,
+    });
+    console.log(service);
     if (!service)
-      throw new ApiError(StatusCodes.BAD_REQUEST, "incorrect category id");
+      throw new ApiError(StatusCodes.BAD_REQUEST, "incorrect reservation id");
     return service;
   }
 
   static async delete(id: string) {
     const succes = ReservationModel.findByIdAndDelete(id);
+    if (!succes)
+      throw new ApiError(StatusCodes.BAD_REQUEST, "incorrect service id");
+    return succes;
+  }
+
+  static async cancel(id: string) {
+    const succes = ReservationModel.findByIdAndUpdate(
+      id,
+      {
+        isCanceled: true,
+      },
+      {
+        new: true,
+      }
+    );
     if (!succes)
       throw new ApiError(StatusCodes.BAD_REQUEST, "incorrect service id");
     return succes;
