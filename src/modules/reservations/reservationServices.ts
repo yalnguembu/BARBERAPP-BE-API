@@ -75,7 +75,6 @@ export abstract class ReservationServices {
     const service = await ReservationModel.findByIdAndUpdate(id, data, {
       new: true,
     });
-    console.log(service);
     if (!service)
       throw new ApiError(StatusCodes.BAD_REQUEST, "incorrect reservation id");
     return service;

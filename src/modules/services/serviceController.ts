@@ -65,7 +65,6 @@ export class ServiceController {
       service.duration = req.body.duration ?? "";
       service.category = req.body.category ?? "";
       const errors = await validate(service);
-      console.log(errors);
 
       if (!id)
         new ApiError(StatusCodes.BAD_REQUEST, "service id must be provided");
