@@ -9,7 +9,11 @@ import { UserController } from "../modules/users";
 import { ServiceController } from "../modules/services";
 import { CategoryController } from "../modules/categories";
 import { ReservationController } from "../modules/reservations";
-import { isUserAdmin, isUserConnected } from "../middelwares";
+import {
+  isUserAdmin,
+  isUserConnected,
+  uploadServiceImage,
+} from "../middelwares";
 import { NotFoundError, ErrorHandler } from "../utils";
 
 export const router = Router();
@@ -54,14 +58,16 @@ router.post(
   "/service",
   isUserConnected,
   isUserAdmin,
-  upload.array("file"),
+  uploadServiceImage.single("picture"),
   ServiceController.create
 );
+
 router.get("/service/:id", isUserConnected, ServiceController.getById);
 router.put(
   "/service/:id",
   isUserConnected,
   isUserAdmin,
+  uploadServiceImage.single("picture"),
   ServiceController.update
 );
 router.delete(
@@ -74,7 +80,11 @@ router.get("/services", isUserConnected, ServiceController.getAll);
 
 router.post("/reservation", isUserConnected, ReservationController.create);
 router.get("/reservations", isUserConnected, ReservationController.getAll);
-router.get("/reservations/archived", isUserConnected, ReservationController.getArchived);
+router.get(
+  "/reservations/archived",
+  isUserConnected,
+  ReservationController.getArchived
+);
 
 router.put("/reservation/:id", isUserConnected, ReservationController.update);
 router.delete(

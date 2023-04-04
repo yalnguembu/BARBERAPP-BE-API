@@ -12,9 +12,9 @@ export class ServiceController {
       service.name = req.body.name ?? "";
       service.description = req.body.description ?? "";
       service.category = req.body.category ?? "";
-      service.picture = req.body.picture;
-      service.price = req.body.price ?? "";
-      service.duration = req.body.duration ?? "";
+      service.picture = req.file?.filename;
+      service.price = parseInt(req.body.price ?? 0);
+      service.duration = parseInt(req.body.duration ?? 0);
       const errors = await validate(service);
 
       if (errors.length)
@@ -58,11 +58,9 @@ export class ServiceController {
       const service = new ServiceDTO();
       service.name = req.body.name ?? "";
       service.description = req.body.description ?? "";
-      service.picture =
-        req.body.picture ??
-        `service-${Math.floor(Math.random() * (9 - 2) + 2)}.png`;
-      service.price = req.body.price ?? "";
-      service.duration = req.body.duration ?? "";
+      service.picture = req.file?.filename;
+      service.price = parseInt(req.body.price ?? 1);
+      service.duration = parseInt(req.body.duration ?? 1);
       service.category = req.body.category ?? "";
       const errors = await validate(service);
 
